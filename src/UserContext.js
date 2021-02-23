@@ -16,10 +16,10 @@ export function UserProvider({ value = { name: users.Fred }, children }) {
   };
 
   return (
-    <UserContext.Provider value={{ user }}>
-      <SwitchUserContext.Provider value={switchUser}>
+    <SwitchUserContext.Provider value={{switchUser}}>
+      <UserContext.Provider value={{ user }}>
         {children}
-      </SwitchUserContext.Provider>
-    </UserContext.Provider>
+      </UserContext.Provider>
+    </SwitchUserContext.Provider>
   );
 }

@@ -1,10 +1,11 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { useContext } from "react";
-import { UserContext, UserProvider } from "./UserContext";
+import { UserContext, SwitchUserContext, UserProvider } from "./UserContext";
 import "@testing-library/jest-dom/extend-expect";
 
 function TestComponent() {
-  const { user, switchUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { switchUser } = useContext(SwitchUserContext);
   return (
     <>
       <p>User: {user.name}</p>
@@ -14,7 +15,7 @@ function TestComponent() {
 }
 
 describe("UserContext", () => {
-  it("should provide user name", () => {
+  test("should provide user name", () => {
     render(
       <UserProvider>
         <TestComponent />
@@ -23,12 +24,13 @@ describe("UserContext", () => {
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
   });
 
-  it("should be able to switch user", () => {
+  test("should be able to switch user", () => {
     const { getByRole } = render(
       <UserProvider>
         <TestComponent />
       </UserProvider>
     );
+    expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
     const switchUserButton = getByRole("button", { name: /^Switch user/i });
     switchUserButton.click();
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Bernie");

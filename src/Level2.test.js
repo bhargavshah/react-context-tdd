@@ -4,7 +4,6 @@ import { UserProvider } from "./UserContext";
 import Level2 from "./Level2";
 
 const renderWithUserProvider = (ui, { providerProps, ...renderProps }) => {
-  
   return render(
     <UserProvider {...providerProps}>{ui}</UserProvider>,
     renderProps
@@ -14,37 +13,27 @@ const renderWithUserProvider = (ui, { providerProps, ...renderProps }) => {
 const getProviderProps = (name) => {
   return {
     value: {
-      user: name
+      name,
     }
   };
 };
 
 describe("Level 2", () => {
   test("renders correct logged in user", () => {
-    const providerProps = {
-      value: {
-        name: "dummy"
-      }
-    };
-    renderWithUserProvider(<Level2 />, { providerProps });
+    renderWithUserProvider(<Level2 />, { providerProps: getProviderProps('dummy') });
     expect(screen.getByText(/^Logged in as/i)).toHaveTextContent(
       "Logged in as dummy"
     );
   });
 
   test("switches user when button is clicked", () => {
-    const providerProps = {
-      value: {
-        name: "A",
-      }
-    };
-    const { getByRole } = renderWithUserProvider(<Level2 />, { providerProps });
+    const { getByRole } = renderWithUserProvider(<Level2 />, { providerProps: getProviderProps('Bernie') });
     expect(screen.getByText(/^Logged in as/i)).toHaveTextContent(
-      "Logged in as A"
+      "Logged in as Bernie"
     );
     getByRole("button", { name: /Switch user/i }).click();
     expect(screen.getByText(/^logged in as/i)).toHaveTextContent(
-      "Logged in as B"
+      "Logged in as Fred"
     );
   });
 });

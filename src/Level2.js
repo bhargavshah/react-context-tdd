@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import { UserContext } from "./UserContext";
+import { SwitchUserContext, UserContext } from "./UserContext";
 
 export default function Level2() {
-  const { user, switchUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { switchUser } = useContext(SwitchUserContext);
 
   return (
     <>
