@@ -15,21 +15,17 @@ function TestComponent() {
 }
 
 describe("UserContext", () => {
+  let component;
+  beforeEach(() => {
+    component = render(<TestComponent />, { wrapper: UserProvider });
+  });
+
   test("should provide user name", () => {
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
   });
 
   test("should be able to switch user", () => {
-    const { getByRole } = render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
+    const { getByRole } = component;
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
     const switchUserButton = getByRole("button", { name: /^Switch user/i });
     switchUserButton.click();
