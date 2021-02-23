@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const users = {
   Fred: "Fred",
@@ -22,4 +22,13 @@ export function UserProvider({ value = { name: users.Fred }, children }) {
       </UserContext.Provider>
     </SwitchUserContext.Provider>
   );
+}
+
+export function useUser() {
+  const { user } = useContext(UserContext) || {};
+  const { switchUser } = useContext(SwitchUserContext) || {};
+  if (!user || !switchUser) {
+    throw new Error('Cannot use `useUser` outside of `UserProvider`');
+  }
+  return { user, switchUser };
 }

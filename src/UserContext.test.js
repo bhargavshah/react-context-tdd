@@ -1,11 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { useContext } from "react";
-import { UserContext, SwitchUserContext, UserProvider } from "./UserContext";
+import { UserProvider, useUser } from "./UserContext";
 import "@testing-library/jest-dom/extend-expect";
 
 function TestComponent() {
-  const { user } = useContext(UserContext);
-  const { switchUser } = useContext(SwitchUserContext);
+  const { user, switchUser } = useUser();
   return (
     <>
       <p>User: {user.name}</p>
@@ -26,11 +24,25 @@ describe("UserContext", () => {
 
   test("should be able to switch user", () => {
     const { getByRole } = component;
-    expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
     const switchUserButton = getByRole("button", { name: /^Switch user/i });
     switchUserButton.click();
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Bernie");
     switchUserButton.click();
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
+  });
+
+  test('should throw error when not wrapped inside `UserProvider`', () => {
+    const err = console.error;
+    console.error = jest.fn();
+    let actualErrorMsg;
+    try {
+      render(<TestComponent />);
+    } catch(e) {
+      actualErrorMsg = e.message;
+    }
+    const expectedErrorMsg = 'Cannot use `useUser` outside of `UserProvider`';
+    expect(actualErrorMsg).toEqual(expectedErrorMsg);
+
+    console.error = err;
   });
 });
