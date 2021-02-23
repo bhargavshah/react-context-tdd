@@ -1,9 +1,10 @@
 import { screen, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { UserContext, UserProvider } from "./UserContext";
+import { UserProvider } from "./UserContext";
 import Level2 from "./Level2";
 
 const renderWithUserProvider = (ui, { providerProps, ...renderProps }) => {
+  
   return render(
     <UserProvider {...providerProps}>{ui}</UserProvider>,
     renderProps
@@ -19,12 +20,10 @@ const getProviderProps = (name) => {
 };
 
 describe("Level 2", () => {
-  it("renders correct logged in user", () => {
+  test("renders correct logged in user", () => {
     const providerProps = {
       value: {
-        user: {
-          name: "dummy"
-        }
+        name: "dummy"
       }
     };
     renderWithUserProvider(<Level2 />, { providerProps });
@@ -33,12 +32,10 @@ describe("Level 2", () => {
     );
   });
 
-  it("switches user when button is clicked", () => {
+  test("switches user when button is clicked", () => {
     const providerProps = {
       value: {
-        user: {
-          name: "A"
-        }
+        name: "A",
       }
     };
     const { getByRole } = renderWithUserProvider(<Level2 />, { providerProps });
