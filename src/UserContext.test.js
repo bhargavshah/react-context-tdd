@@ -14,6 +14,17 @@ function TestComponent() {
 
 describe("UserContext", () => {
   let component;
+  let consoleError;
+
+  beforeEach(() => {
+    consoleError = console.error;
+    console.error = jest.fn();
+  });
+
+  afterEach(() => {
+    console.error = consoleError;
+  })
+
   beforeEach(() => {
     component = render(<TestComponent />, { wrapper: UserProvider });
   });
@@ -31,18 +42,9 @@ describe("UserContext", () => {
     expect(screen.getByText(/^User:/i)).toHaveTextContent("User: Fred");
   });
 
-  test('should throw error when not wrapped inside `UserProvider`', () => {
-    const err = console.error;
-    console.error = jest.fn();
-    let actualErrorMsg;
-    try {
-      render(<TestComponent />);
-    } catch(e) {
-      actualErrorMsg = e.message;
-    }
-    const expectedErrorMsg = 'Cannot use `useUser` outside of `UserProvider`';
-    expect(actualErrorMsg).toEqual(expectedErrorMsg);
-
-    console.error = err;
+  test("should throw error when not wrapped inside `UserProvider`", () => {
+    expect(() => render(<TestComponent />)).toThrow(
+      "Cannot use `useUser` outside of `UserProvider`"
+    );
   });
 });
